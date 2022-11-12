@@ -48,6 +48,8 @@ public class Conditions {
         register("ITEMWRAPPER", ItemWrapperCondition.class);
         register("DISTANCE", DistanceCondition.class);
         register("SWIMMING", SwimmingCondition.class);
+
+        registerExtensionCondition(name -> name + EvaluatingCondition.SUFFIX, EvaluatingCondition.class);
     }
 
     public static void registerExtensionCondition(UnaryOperator<String> nameConverter, Class<? extends ExtensionCondition> extensionConditionClass) {

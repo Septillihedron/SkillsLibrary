@@ -71,6 +71,8 @@ public class Effects {
         registerEffect("HUNGER", HungerEffect.class);
         registerEffect("VEINMINER",VeinMinerEffect.class);
         registerEffect("ACTIONBAR", ActionBarEffect.class);
+
+        registerExtensionEffect(name -> name + EvaluatingEffect.SUFFIX, EvaluatingEffect.class);
     }
 
     public static void registerExtensionEffect(UnaryOperator<String> nameConverter, Class<? extends ExtensionEffect> extensionEffectClass) {
