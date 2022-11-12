@@ -4,12 +4,18 @@ import com.google.common.collect.HashBiMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.function.UnaryOperator;
 
 public class Effects {
 
     private static final HashBiMap<String, Integer> nameToEffect = HashBiMap.create();
     private static final List<Class<? extends Effect>> effectToData = new ArrayList<>();
     private static int counter = 0;
+
+    private static final List<ExtensionEffectEntry> extensionEffects = new ArrayList<>();
+
+    private record ExtensionEffectEntry(UnaryOperator<String> nameConverter, Class<? extends ExtensionEffect> extensionEffect) {};
 
     static {
         registerEffect("DAMAGE", DamageEffect.class);
@@ -67,7 +73,24 @@ public class Effects {
         registerEffect("ACTIONBAR", ActionBarEffect.class);
     }
 
+    public static void registerExtensionEffect(UnaryOperator<String> nameConverter, Class<? extends ExtensionEffect> extensionEffectClass) {
+        extensionEffects.add(new ExtensionEffectEntry(nameConverter, extensionEffectClass));
+        
+        var effectNames = Set.copyOf(nameToEffect.keySet());
+        for (String name : effectNames) {
+            registerInternal(nameConverter.apply(name), extensionEffectClass);
+        }
+    }
+
     public static void registerEffect(String name, Class<? extends Effect> effectDataClass) {
+        registerInternal(name, effectDataClass);
+
+        for (ExtensionEffectEntry entry : extensionEffects) {
+            registerInternal(entry.nameConverter.apply(name), entry.extensionEffect);
+        }
+    }
+    
+    private static void registerInternal(String name, Class<? extends Effect> effectDataClass) {
         nameToEffect.put(name, counter);
         effectToData.add(effectDataClass);
         counter++;
