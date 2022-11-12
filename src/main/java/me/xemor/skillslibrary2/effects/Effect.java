@@ -14,7 +14,10 @@ public abstract class Effect {
     private final int effect;
     private Mode mode = null;
 
+    private final ConfigurationSection configurationSection;
+
     public Effect(int effect, ConfigurationSection configurationSection) {
+        this.configurationSection = configurationSection;
         this.effect = effect;
         try {
             mode = Mode.valueOf(configurationSection.getString("mode", "ALL"));
@@ -57,6 +60,10 @@ public abstract class Effect {
 
     public Mode getMode() {
         return mode;
+    }
+    
+    public ConfigurationSection getConfigurationSection() {
+        return configurationSection;
     }
 
 }

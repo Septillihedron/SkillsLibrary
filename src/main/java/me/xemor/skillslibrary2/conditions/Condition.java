@@ -15,9 +15,12 @@ public abstract class Condition {
     private final int condition;
     private Mode mode;
 
+    private ConfigurationSection configurationSection;
+
     private EffectList otherwise;
 
     public Condition(int condition, ConfigurationSection configurationSection) {
+        this.configurationSection = configurationSection;
         this.condition = condition;
         ConfigurationSection otherwiseSection = configurationSection.getConfigurationSection("else");
         if (otherwiseSection != null) otherwise = new EffectList(otherwiseSection);
@@ -63,6 +66,10 @@ public abstract class Condition {
 
     public Mode getMode() {
         return mode;
+    }
+
+    public ConfigurationSection getConfigurationSection() {
+        return configurationSection;
     }
 
 }
