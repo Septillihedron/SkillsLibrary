@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /*
     This class was originally written by Creeves
  */
-public class TimerEffect extends WrapperEffect implements EntityEffect, TargetEffect, LocationEffect, ItemStackEffect {
+public class TimerEffect extends WrapperEffect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect, ItemStackEffect {
 
     private final long ticksDelay;
     private final long period;
@@ -25,7 +25,7 @@ public class TimerEffect extends WrapperEffect implements EntityEffect, TargetEf
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public boolean useEffect(Execution execution, Entity entity) {
         new BukkitRunnable() {
             int count = 0;
             @Override

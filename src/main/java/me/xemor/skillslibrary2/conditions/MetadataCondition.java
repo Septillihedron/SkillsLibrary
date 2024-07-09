@@ -1,6 +1,7 @@
 package me.xemor.skillslibrary2.conditions;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -32,9 +33,9 @@ public class MetadataCondition extends ComparisonCondition implements EntityCond
         return isTrue(target.getPersistentDataContainer());
     }
 
-    public boolean isTrue(PersistentDataContainer container) {
+    public boolean isTrue(Execution execution, PersistentDataContainer container) {
         Double value = container.get(variable, PersistentDataType.DOUBLE);
-        return checkComparison(value == null ? 0 : value);
+        return checkComparison(execution, value == null ? 0 : value);
     }
 
 }

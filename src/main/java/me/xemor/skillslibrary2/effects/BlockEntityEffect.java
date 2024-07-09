@@ -1,6 +1,7 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -26,20 +27,16 @@ public class BlockEntityEffect extends Effect implements TargetEffect {
     }
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
+    public void useEffectAgainst(Execution execution, Entity target) {
         Location location = target.getLocation();
         World world = location.getWorld();
         Block block = world.getBlockAt(location);
         Material originalType = block.getType();
         block.setType(blockToPlace, false);
         if (duration >= 0) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
+            SkillsLibrary.getScheduling().entitySpecificScheduler(target).runDelayed(() -> {
                     block.setType(originalType, false);
-                }
-            }.runTaskLater(SkillsLibrary.getInstance(), this.duration);
+            }, () -> {}, this.duration);
         }
-        return false;
     }
 }

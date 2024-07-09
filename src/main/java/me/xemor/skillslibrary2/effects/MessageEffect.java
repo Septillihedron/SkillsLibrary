@@ -1,6 +1,7 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -9,9 +10,10 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MessageEffect extends Effect implements EntityEffect, TargetEffect {
+public class MessageEffect extends Effect implements EntityEffect, ComplexTargetEffect {
 
     private final String message;
 
@@ -28,35 +30,40 @@ public class MessageEffect extends Effect implements EntityEffect, TargetEffect 
     }
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
-        sendMessage(entity, target);
-        return false;
+    public void useEffect(Execution execution, Entity entity, Entity target) {
+        sendMessage(execution, entity, target);
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
-        sendMessage(entity, null);
-        return false;
+    public void useEffect(Execution execution, Entity entity) {
+        sendMessage(execution, entity, null);
     }
 
-    public void sendMessage(Entity entity, @Nullable Entity target) {
+    public void sendMessage(Execution execution, @NotNull Entity entity, @Nullable Entity target) {
         if (entity instanceof Player player) {
             Audience audience = null;
             Component component = null;
+            String currentMessage = message;
+            if (target != null) {
+                currentMessage = execution.message(currentMessage, entity, target);
+            }
+            else {
+                currentMessage = execution.message(currentMessage, entity);
+            }
             try {
                 if (target instanceof Player targetPlayer) {
                     audience = SkillsLibrary.getBukkitAudiences().player(targetPlayer);
-                    component = MiniMessage.miniMessage().deserialize(message, Placeholder.unparsed("player", target.getName()), Placeholder.unparsed("self", entity.getName()), Placeholder.unparsed("target", target.getName()));
+                    component = MiniMessage.miniMessage().deserialize(currentMessage, Placeholder.unparsed("player", target.getName()), Placeholder.unparsed("self", entity.getName()), Placeholder.unparsed("target", target.getName()));
                 }
                 else if (target == null) {
                     audience = SkillsLibrary.getBukkitAudiences().player(player);
-                    component = MiniMessage.miniMessage().deserialize(message, Placeholder.unparsed("player", entity.getName()), Placeholder.unparsed("self", entity.getName()));
+                    component = MiniMessage.miniMessage().deserialize(currentMessage, Placeholder.unparsed("player", entity.getName()), Placeholder.unparsed("self", entity.getName()));
                 }
                 else {
                     return;
                 }
             } catch (ParsingException e) {
-                SkillsLibrary.getInstance().getLogger().severe("There is likely a legacy colour code in this message " + message);
+                SkillsLibrary.getInstance().getLogger().severe("There is likely a legacy colour code in this message " + currentMessage);
                 e.printStackTrace();
             }
             audience.sendMessage(component);

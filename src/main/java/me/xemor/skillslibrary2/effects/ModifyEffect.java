@@ -1,12 +1,13 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class ModifyEffect extends Effect {
 
     private Operation operation;
-    protected double value;
+    protected String valueExpr;
 
     public ModifyEffect(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);
@@ -18,16 +19,16 @@ public abstract class ModifyEffect extends Effect {
             this.operation = Operation.SET;
             return;
         }
-        this.value = configurationSection.getDouble("value", 1);
+        this.valueExpr = configurationSection.getString("value", "1");
     }
 
-    public double changeValue(double oldValue) {
+    public double changeValue(Execution execution, double oldValue) {
         return switch (operation) {
-            case ADD -> oldValue + value;
-            case SUBTRACT -> oldValue - value;
-            case MULTIPLY -> oldValue * value;
-            case DIVIDE -> oldValue / value;
-            case SET -> value;
+            case ADD -> oldValue + execution.expression(valueExpr);
+            case SUBTRACT -> oldValue - execution.expression(valueExpr);
+            case MULTIPLY -> oldValue * execution.expression(valueExpr);
+            case DIVIDE -> oldValue / execution.expression(valueExpr);
+            case SET -> execution.expression(valueExpr);
         };
     }
 

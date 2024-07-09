@@ -1,40 +1,39 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.configurationdata.entity.EntityData;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
-public class ArrowEffect extends Effect implements TargetEffect {
+public class ArrowEffect extends Effect implements ComplexTargetEffect {
 
-    private final double velocity;
-    private final int damage;
+    private final String velocityExpression;
+    private final String damageExpression;
     private final EntityData entityData;
-    private final int fireTicks;
+    private final String fireTicksExpression;
     private static final double log099 = Math.log(0.99);
 
     public ArrowEffect(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);
-        velocity = configurationSection.getDouble("velocity", 1.0);
-        damage = configurationSection.getInt("damage", 4);
+        velocityExpression = configurationSection.getString("velocity", "1.0");
+        damageExpression = configurationSection.getString("damage", "4");
         entityData = EntityData.create(configurationSection, "entity", EntityType.ARROW);
-        fireTicks = configurationSection.getInt("fireTicks", 0);
+        fireTicksExpression = configurationSection.getString("fireTicks", "0");
     }
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
+    public void useEffect(Execution execution, Entity entity, Entity target) {
         Location location = target.getLocation();
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
+        if (entity instanceof LivingEntity livingEntity) {
             Location startPoint = livingEntity.getEyeLocation();
             double yDifference = location.getY() - startPoint.getY();
             double xDifference = location.getX() - startPoint.getX();
             double zDifference = location.getZ() - startPoint.getZ();
             double length = Math.sqrt(yDifference * yDifference + xDifference * xDifference + zDifference * zDifference);
-            if (length < 0.1) return false;
-            int time = (int) Math.round(length / velocity);
+            if (length < 0.1) return;
+            int time = (int) Math.round(length / execution.expression(velocityExpression));
             double initialYVelocity = solveForInitialVerticalVelocity(yDifference, time);
             double initialXVelocity = solveForInitialHorizontalVelocity(xDifference, time);
             double initialZVelocity = solveForInitialHorizontalVelocity(zDifference, time);
@@ -42,17 +41,16 @@ public class ArrowEffect extends Effect implements TargetEffect {
             Entity spawnedEntity = entityData.spawnEntity(startPoint);
             if (spawnedEntity instanceof Arrow arrow) {
                 arrow.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
-                arrow.setDamage(damage);
+                arrow.setDamage(execution.expression(damageExpression));
             }
             if (spawnedEntity instanceof Projectile projectile) {
                 projectile.setShooter(livingEntity);
             }
-            spawnedEntity.setFireTicks(fireTicks);
+            spawnedEntity.setFireTicks(execution.expression(fireTicksExpression));
             startPoint = startPoint.add(vector.clone().normalize());
             spawnedEntity.teleport(startPoint);
             spawnedEntity.setVelocity(vector);
         }
-        return false;
     }
 
     private double solveForInitialVerticalVelocity(double displacement, int time) {

@@ -9,13 +9,13 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class ScrambleInventoryEffect extends Effect implements EntityEffect, TargetEffect {
+public class ScrambleInventoryEffect extends Effect implements EntityEffect, ComplexTargetEffect {
     public ScrambleInventoryEffect(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public boolean useEffect(Execution execution, Entity entity) {
         scrambleInventory(entity);
         return false;
     }

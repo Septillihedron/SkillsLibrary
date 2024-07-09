@@ -1,5 +1,6 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -14,20 +15,16 @@ public class GlidingEffect extends Effect implements EntityEffect, TargetEffect 
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
+    public void useEffect(Execution execution, Entity entity) {
+        if (entity instanceof LivingEntity livingEntity) {
             livingEntity.setGliding(glide);
         }
-        return false;
     }
 
     @Override
-    public boolean useEffect(Entity livingEntity, Entity target) {
-        if (target instanceof LivingEntity) {
-            LivingEntity livingTarget = (LivingEntity) target;
+    public void useEffectAgainst(Execution execution, Entity target) {
+        if (target instanceof LivingEntity livingTarget) {
             livingTarget.setGliding(glide);
         }
-        return false;
     }
 }

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
-public class RaytraceEffect extends WrapperEffect implements EntityEffect, TargetEffect {
+public class RaytraceEffect extends WrapperEffect implements EntityEffect, ComplexTargetEffect {
 
     private double maxDistance;
     private FluidCollisionMode collisionMode;
@@ -33,7 +33,7 @@ public class RaytraceEffect extends WrapperEffect implements EntityEffect, Targe
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public boolean useEffect(Execution execution, Entity entity) {
         World world = entity.getWorld();
         Location location;
         if (entity instanceof Player) {

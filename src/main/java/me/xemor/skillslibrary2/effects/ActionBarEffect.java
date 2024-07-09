@@ -1,6 +1,7 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -27,22 +28,21 @@ public class ActionBarEffect extends Effect implements EntityEffect, TargetEffec
     }
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
-        sendMessage(target);
-        return false;
+    public void useEffectAgainst(Execution execution, Entity target) {
+        sendMessage(execution, target);
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
-        sendMessage(entity);
-        return false;
+    public void useEffect(Execution execution, Entity entity) {
+        sendMessage(execution, entity);
     }
 
-    public void sendMessage(Entity entity) {
+    public void sendMessage(Execution execution, Entity entity) {
         if (entity instanceof Player player) {
             Audience audience = SkillsLibrary.getBukkitAudiences().player(player);
             try {
-                Component component = MiniMessage.miniMessage().deserialize(message, Placeholder.unparsed("player", player.getDisplayName()));
+                String currentMessage = execution.message(message);
+                Component component = MiniMessage.miniMessage().deserialize(currentMessage, Placeholder.unparsed("player", player.getDisplayName()));
                 audience.sendActionBar(component);
             } catch (ParsingException e) {
                 SkillsLibrary.getInstance().getLogger().severe("There is likely a legacy colour code in this message " + message);

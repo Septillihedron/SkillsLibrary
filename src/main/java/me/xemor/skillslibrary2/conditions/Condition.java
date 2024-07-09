@@ -5,10 +5,13 @@ import me.xemor.skillslibrary2.SkillsLibrary;
 import me.xemor.skillslibrary2.effects.EffectList;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 public abstract class Condition {
 
@@ -55,6 +58,32 @@ public abstract class Condition {
             result.printStackTrace();
         }
         return null;
+    }
+
+    private CompletableFuture<Boolean> correctThread(Entity entity, Supplier<Boolean> condition) {
+        CompletableFuture<Boolean> future = new CompletableFuture();
+        if (this.entityIsOwnedByCurrentRegion != null) {
+            try {
+                if ((Boolean)this.entityIsOwnedByCurrentRegion.invoke(entity)) {
+                    r.run();
+                    future.complete(true);
+                } else {
+                    this.getScheduling().entitySpecificScheduler(entity).run(() -> {
+                        r.run();
+                        future.complete(false);
+                    }, () -> {
+                    });
+                }
+            } catch (InvocationTargetException | IllegalAccessException var5) {
+                ReflectiveOperationException e = var5;
+                throw new RuntimeException(e);
+            }
+        } else {
+            r.run();
+            future.complete(true);
+        }
+
+        return future;
     }
 
     public int getCondition() {

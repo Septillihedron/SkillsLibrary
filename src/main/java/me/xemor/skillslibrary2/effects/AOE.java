@@ -1,14 +1,14 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
 import java.util.Collection;
-import java.util.List;
 
-public class AOE extends WrapperEffect implements EntityEffect, TargetEffect, LocationEffect {
+public class AOE extends WrapperEffect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect {
 
     double radius;
 
@@ -20,26 +20,24 @@ public class AOE extends WrapperEffect implements EntityEffect, TargetEffect, Lo
         }
     }
     @Override
-    public boolean useEffect(Entity skillEntity, Location location) {
-        boolean shouldCancel = false;
+    public void useEffect(Execution execution, Entity skillEntity, Location location) {
         Collection<Entity> entities = location.getWorld().getNearbyEntities(location, radius, radius, radius);
         for (Entity entity : entities) {
             if (entity != skillEntity) {
-                shouldCancel |= handleEffects(skillEntity);
-                shouldCancel |= handleEffects(skillEntity, entity);
+                handleEffects(skillEntity);
+                handleEffects(skillEntity, entity);
             }
         }
-        return shouldCancel;
     }
 
     @Override
-    public boolean useEffect(Entity skillEntity) {
-        return useEffect(skillEntity, skillEntity.getLocation());
+    public void useEffect(Execution execution, Entity entity) {
+        useEffect(execution, entity, entity.getLocation());
     }
 
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
-        return useEffect(entity, target.getLocation());
+    public void useEffect(Execution execution, Entity entity, Entity target) {
+        useEffect(execution, entity, target.getLocation());
     }
 }

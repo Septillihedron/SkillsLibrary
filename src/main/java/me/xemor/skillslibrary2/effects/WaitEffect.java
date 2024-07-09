@@ -2,13 +2,12 @@ package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class WaitEffect extends WrapperEffect implements EntityEffect, TargetEffect, LocationEffect, ItemStackEffect {
+public class WaitEffect extends WrapperEffect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect, ItemStackEffect {
 
     private final long ticksDelay;
 
@@ -18,7 +17,7 @@ public class WaitEffect extends WrapperEffect implements EntityEffect, TargetEff
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public boolean useEffect(Execution execution, Entity entity) {
         new BukkitRunnable() {
             @Override
             public void run() {

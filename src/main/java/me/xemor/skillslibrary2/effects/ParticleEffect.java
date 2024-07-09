@@ -2,6 +2,7 @@ package me.xemor.skillslibrary2.effects;
 
 import me.creeves.particleslibrary.ParticleData;
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -23,25 +24,22 @@ public class ParticleEffect extends Effect implements EntityEffect, TargetEffect
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public void useEffect(Execution execution, Entity entity) {
         if (entity instanceof LivingEntity livingEntity) {
             particleData.spawnParticle(livingEntity);
         }
-        return false;
     }
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
+    public void useEffectAgainst(Execution execution, Entity target) {
         if (target instanceof LivingEntity livingEntity) {
             particleData.spawnParticle(livingEntity);
         }
-        return false;
     }
 
 
     @Override
-    public boolean useEffect(Entity entity, Location location) {
+    public void useEffectAgainst(Execution execution, Location location) {
         particleData.spawnParticle(location);
-        return false;
     }
 }

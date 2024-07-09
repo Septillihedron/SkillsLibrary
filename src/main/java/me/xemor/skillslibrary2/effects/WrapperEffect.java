@@ -29,7 +29,7 @@ public abstract class WrapperEffect extends Effect {
 
     public boolean handleEffects(Entity entity, Object... objects) {
         if (conditions.ANDConditions(entity, false, objects)) {
-            return effects.handleExactEffects(entity, objects);
+            return effects.handleExactEffects(execution, entity, objects);
         }
         return false;
     }

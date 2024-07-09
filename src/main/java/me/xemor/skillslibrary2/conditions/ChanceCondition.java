@@ -3,9 +3,12 @@ package me.xemor.skillslibrary2.conditions;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class ChanceCondition extends Condition implements EntityCondition {
 
-    private double chance;
+    private final double chance;
 
     public ChanceCondition(int condition, ConfigurationSection configurationSection) {
         super(condition, configurationSection);
@@ -13,7 +16,7 @@ public class ChanceCondition extends Condition implements EntityCondition {
     }
 
     @Override
-    public boolean isTrue(Entity boss) {
-        return Math.random() <= chance;
+    public CompletableFuture<Boolean> isTrue(Entity boss) {
+        return CompletableFuture.completedFuture(ThreadLocalRandom.current().nextFloat() <= chance);
     }
 }

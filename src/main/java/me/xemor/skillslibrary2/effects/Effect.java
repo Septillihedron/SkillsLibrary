@@ -2,7 +2,6 @@ package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.Mode;
 import me.xemor.skillslibrary2.SkillsLibrary;
-import me.xemor.skillslibrary2.conditions.Conditions;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
@@ -34,8 +33,8 @@ public abstract class Effect {
         return switch (mode) {
             case ALL -> true;
             case SELF -> this instanceof EntityEffect;
-            case OTHER -> this instanceof TargetEffect;
-            case LOCATION -> this instanceof LocationEffect;
+            case OTHER -> this instanceof ComplexTargetEffect || this instanceof TargetEffect;
+            case LOCATION -> this instanceof ComplexLocationEffect || this instanceof LocationEffect;
             default -> false;
         };
     }

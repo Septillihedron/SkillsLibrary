@@ -1,7 +1,7 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
-import org.bukkit.Location;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -24,15 +24,13 @@ public class MetadataEffect extends ModifyEffect implements EntityEffect, Target
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public void useEffect(Execution execution, Entity entity) {
         setVariable(entity.getPersistentDataContainer());
-        return false;
     }
 
     @Override
-    public boolean useEffect(Entity livingEntity, Entity target) {
+    public void useEffectAgainst(Execution execution, Entity target) {
         setVariable(target.getPersistentDataContainer());
-        return false;
     }
 
     public void setVariable(PersistentDataContainer container) {
@@ -43,7 +41,5 @@ public class MetadataEffect extends ModifyEffect implements EntityEffect, Target
         }
         container.set(variable, PersistentDataType.DOUBLE, changeValue(value));
     }
-
-
 }
 

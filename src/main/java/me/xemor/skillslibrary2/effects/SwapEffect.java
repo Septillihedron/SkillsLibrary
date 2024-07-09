@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
-public class SwapEffect extends Effect implements TargetEffect {
+public class SwapEffect extends Effect implements ComplexTargetEffect {
 
     public SwapEffect(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);

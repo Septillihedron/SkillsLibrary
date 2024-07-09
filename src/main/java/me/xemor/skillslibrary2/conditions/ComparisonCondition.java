@@ -1,12 +1,13 @@
 package me.xemor.skillslibrary2.conditions;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.configuration.ConfigurationSection;
 
 public abstract class ComparisonCondition extends Condition {
 
     private Comparison comparison;
-    private final double comparedValue;
+    private final String comparedValueExpression;
 
     public ComparisonCondition(int condition, ConfigurationSection configurationSection) {
         super(condition, configurationSection);
@@ -17,18 +18,18 @@ public abstract class ComparisonCondition extends Condition {
             SkillsLibrary.getInstance().getLogger().severe("This is not a valid comparison type! " + comparisonStr + " This was found at " + configurationSection.getCurrentPath() + ".comparison");
             e.printStackTrace();
         }
-        comparedValue = configurationSection.getDouble("value");
+        comparedValueExpression = configurationSection.getString("value");
     }
 
-    public boolean checkComparison(double value) {
-        switch (comparison) {
-            case EQUAL: return value == comparedValue;
-            case LESS: return value < comparedValue;
-            case GREATER: return value > comparedValue;
-            case LESSEQUAL: return value <= comparedValue;
-            case GREATEREQUAL: return value >= comparedValue;
-        }
-        return true;
+    public boolean checkComparison(Execution execution, double value) {
+        double comparedValue = execution.expression(comparedValueExpression);
+        return switch (comparison) {
+            case EQUAL -> value == comparedValue;
+            case LESS -> value < comparedValue;
+            case GREATER -> value > comparedValue;
+            case LESSEQUAL -> value <= comparedValue;
+            case GREATEREQUAL -> value >= comparedValue;
+        };
     }
 
     public enum Comparison {
@@ -36,25 +37,14 @@ public abstract class ComparisonCondition extends Condition {
 
         public static Comparison fromString(String string) {
             string = string.toUpperCase();
-            switch (string) {
-                case "=": //drop down
-                case "==": //drop down
-                case "EQUAL":
-                    return EQUAL;
-                case "<": //drop down
-                case "LESS":
-                    return LESS;
-                case ">": //drop down
-                case "GREATER":
-                    return GREATER;
-                case "<=": //drop down
-                case "LESSEQUAL":
-                    return LESSEQUAL;
-                case ">=": //drop down
-                case "GREATEREQUAL":
-                    return GREATEREQUAL;
-            }
-            throw new IllegalArgumentException("This is not a valid comparison type!");
+            return switch (string) {
+                case "=", "==", "EQUAL" -> EQUAL;
+                case "<", "LESS" -> LESS;
+                case ">", "GREATER" -> GREATER;
+                case "<=", "LESSEQUAL" -> LESSEQUAL;
+                case ">=", "GREATEREQUAL" -> GREATEREQUAL;
+                default -> throw new IllegalArgumentException("This is not a valid comparison type!");
+            };
         }
     }
 

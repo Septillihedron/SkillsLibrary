@@ -1,5 +1,7 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -12,11 +14,11 @@ public class LoseTargetEffect extends Effect implements EntityEffect {
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
-        if (entity instanceof Mob) {
-            Mob mob = (Mob) entity;
-            mob.setTarget(null);
-        }
-        return false;
+    public void useEffect(Execution execution, Entity entity) {
+        SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
+            if (entity instanceof Mob mob) {
+                mob.setTarget(null);
+            }
+        });
     }
 }

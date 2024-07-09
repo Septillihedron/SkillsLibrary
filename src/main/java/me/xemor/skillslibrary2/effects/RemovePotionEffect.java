@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RemovePotionEffect extends Effect implements EntityEffect, TargetEffect {
+public class RemovePotionEffect extends Effect implements EntityEffect, ComplexTargetEffect {
 
     private Set<PotionEffectType> types;
 
@@ -37,7 +37,7 @@ public class RemovePotionEffect extends Effect implements EntityEffect, TargetEf
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public boolean useEffect(Execution execution, Entity entity) {
         removeEffects(entity);
         return false;
     }

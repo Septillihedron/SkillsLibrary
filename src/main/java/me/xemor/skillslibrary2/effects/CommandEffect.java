@@ -1,14 +1,16 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Map;
 
-public class CommandEffect extends Effect implements EntityEffect, TargetEffect {
+public class CommandEffect extends Effect implements EntityEffect, ComplexTargetEffect {
 
     private Executor executor;
     private List<String> commands;
@@ -25,21 +27,19 @@ public class CommandEffect extends Effect implements EntityEffect, TargetEffect 
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public void useEffect(Execution execution, Entity entity) {
         for (String command : commands) {
-            command = parse(command, entity, null);
-            execute(command, entity);
+            String parsedCommand = parse(command, execution, entity, null);
+            execute(parsedCommand, entity);
         }
-        return false;
     }
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
+    public void useEffect(Execution execution, Entity entity, Entity target) {
         for (String command : commands) {
-            command = parse(command, entity, target);
-            execute(command, entity);
+            String parsedCommand = parse(command, execution, entity, target);
+            execute(parsedCommand, entity);
         }
-        return false;
     }
 
     public void execute(String command, Entity entity) {
@@ -54,15 +54,17 @@ public class CommandEffect extends Effect implements EntityEffect, TargetEffect 
         }
     }
 
-    public String parse(String command, Entity entity1, Entity entity2) {
-        if (entity1 instanceof Player player) {
-            command = command.replace("%self_name%", player.getName());
+    public String parse(String command, Execution execution, Entity entity, Entity target) {
+        var map = target == null ? Map.of("self", entity.getPersistentDataContainer()) : Map.of("self", entity.getPersistentDataContainer(), "other", target.getPersistentDataContainer());
+        String parsedCommand = execution.message(command, map);
+        if (entity instanceof Player player) {
+            parsedCommand = parsedCommand.replace("%self_name%", player.getName());
         }
-        if (entity2 instanceof Player player) {
-            command = command.replace("%other_name%", player.getName());
-            command = command.replace("%target_name%", player.getName());
+        if (target instanceof Player player) {
+            parsedCommand = parsedCommand.replace("%other_name%", player.getName());
+            parsedCommand = parsedCommand.replace("%target_name%", player.getName());
         }
-        return command;
+        return parsedCommand;
     }
 
     /**

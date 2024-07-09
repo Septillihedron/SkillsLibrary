@@ -1,5 +1,7 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -7,7 +9,7 @@ import org.bukkit.util.Vector;
 
 import me.xemor.configurationdata.VectorData;
 
-public class LocationOffsetEffect extends WrapperEffect implements EntityEffect, LocationEffect, TargetEffect {
+public class LocationOffsetEffect extends WrapperEffect implements EntityEffect, ComplexLocationEffect, ComplexTargetEffect {
 
     private final Vector offset;
 
@@ -22,20 +24,18 @@ public class LocationOffsetEffect extends WrapperEffect implements EntityEffect,
     }
 
     @Override
-    public boolean useEffect(Entity entity, Location location) {
-        return handleEffects(entity, location.add(offset));
+    public void useEffect(Execution execution, Entity entity, Location location) {
+        handleEffects(entity, location.add(offset));
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
-        useEffect(entity, entity.getLocation());
-        return false;
+    public void useEffect(Execution execution, Entity entity) {
+        SkillsLibrary.getFoliaHacks().runASAP(entity, () -> useEffect(execution, entity, entity.getLocation()));
     }
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
-        useEffect(entity, target.getLocation());
-        return false;
+    public void useEffect(Execution execution, Entity entity, Entity target) {
+        SkillsLibrary.getFoliaHacks().runASAP(target, () -> useEffect(execution, entity, target.getLocation()));
     }
 
 }

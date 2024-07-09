@@ -1,50 +1,61 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.Mode;
+import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.security.Signature;
+import java.util.Map;
+
 public class LungeEffect extends Effect implements EntityEffect, TargetEffect {
 
-    private final double horizontalVelocity;
-    private final double verticalVelocity;
+    private final String horizontalVelocityExpr;
+    private final String verticalVelocityExpr;
     private final boolean overwrite;
 
     public LungeEffect(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);
-        horizontalVelocity = configurationSection.getDouble("horizontalVelocity");
-        verticalVelocity = configurationSection.getDouble("verticalVelocity");
+        horizontalVelocityExpr = configurationSection.getString("horizontalVelocity");
+        verticalVelocityExpr = configurationSection.getString("verticalVelocity");
         overwrite = configurationSection.getBoolean("overwrite", true);
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
-        if (entity instanceof LivingEntity) {
-            setVelocity((LivingEntity) entity);
+    public void useEffect(Execution execution, Entity entity) {
+        if (entity instanceof LivingEntity livingEntity) {
+            SkillsLibrary.getFoliaHacks().runASAP(livingEntity, () -> {
+                setVelocity(execution, livingEntity);
+            });
         }
-        return false;
     }
 
     @Override
-    public boolean useEffect(Entity livingEntity, Entity target) {
-        if (target instanceof LivingEntity) {
-            setVelocity((LivingEntity) target);
+    public void useEffectAgainst(Execution execution, Entity target) {
+        if (target instanceof LivingEntity livingTarget) {
+            SkillsLibrary.getFoliaHacks().runASAP(livingTarget, () -> {
+                setVelocity(execution, livingTarget);
+            });
         }
-        return false;
     }
 
-    public void setVelocity(LivingEntity entity) {
+    public void setVelocity(Execution execution, LivingEntity entity) {
         Vector direction;
         if (entity instanceof Player)
             direction = entity.getEyeLocation().getDirection();
         else {
             direction = entity.getLocation().getDirection();
         }
+        String entityMode = getMode() == Mode.SELF ? "self" : "other";
+        double horizontalVelocity = execution.expression(horizontalVelocityExpr, Map.of(entityMode, entity.getPersistentDataContainer()));
+        double velocityVelocity = execution.expression(verticalVelocityExpr, Map.of(entityMode, entity.getPersistentDataContainer()));
         double x = direction.getX() * horizontalVelocity;
         double z = direction.getZ() * horizontalVelocity;
-        double y = direction.getY() * verticalVelocity;
+        double y = direction.getY() * velocityVelocity;
         if (overwrite) entity.setVelocity(new Vector(x, y, z));
         else entity.setVelocity(entity.getVelocity().add(new Vector(x, y, z)));
     }

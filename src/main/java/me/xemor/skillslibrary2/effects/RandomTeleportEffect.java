@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
-public class RandomTeleportEffect extends Effect implements EntityEffect, TargetEffect {
+public class RandomTeleportEffect extends Effect implements EntityEffect, ComplexTargetEffect {
 
     private final double maxDistance;
     private final double minDistance;
@@ -20,7 +20,7 @@ public class RandomTeleportEffect extends Effect implements EntityEffect, Target
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public boolean useEffect(Execution execution, Entity entity) {
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
             entity.teleport(findLocation(livingEntity.getEyeLocation()));

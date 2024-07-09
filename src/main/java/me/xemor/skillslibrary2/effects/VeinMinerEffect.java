@@ -8,11 +8,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.EnumSet;
 
-public class VeinMinerEffect extends Effect implements LocationEffect {
+public class VeinMinerEffect extends Effect implements ComplexLocationEffect {
 
     private final SetData<Material> materials;
     private final long delay;
@@ -46,18 +45,17 @@ public class VeinMinerEffect extends Effect implements LocationEffect {
         Material currentType = block.getType();
         if (count >= limit) return;
         if (materials.inSet(currentType)) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    for (BlockFace face : faces) {
-                        Block blockToBreak = block.getRelative(face);
-                        if (allowMultiTypeVein || blockToBreak.getType() == currentType) {
-                            breakLog(blockToBreak, count + 1);
+            SkillsLibrary.getScheduling().regionSpecificScheduler(block.getLocation()).runDelayed(
+                    () -> {
+                        for (BlockFace face : faces) {
+                            Block blockToBreak = block.getRelative(face);
+                            if (allowMultiTypeVein || blockToBreak.getType() == currentType) {
+                                breakLog(blockToBreak, count + 1);
+                            }
                         }
-                    }
-                    block.breakNaturally();
-                }
-            }.runTaskLater(SkillsLibrary.getInstance(),delay);
+                        block.breakNaturally();
+                    }, delay
+            );
         }
     }
 }

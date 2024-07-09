@@ -1,5 +1,6 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
@@ -13,7 +14,7 @@ public class FurnaceBurnTimeEffect extends ModifyEffect implements LocationEffec
     }
 
     @Override
-    public boolean useEffect(Entity entity, Location location) {
+    public void useEffectAgainst(Execution execution, Location location) {
         BlockState state = location.getBlock().getState();
         if (state instanceof Furnace furnace) {
             short newFurnaceBurnTime = (short) Math.round(changeValue(furnace.getBurnTime()));
@@ -21,6 +22,5 @@ public class FurnaceBurnTimeEffect extends ModifyEffect implements LocationEffec
                 furnace.setBurnTime(newFurnaceBurnTime);
             }
         }
-        return false;
     }
 }

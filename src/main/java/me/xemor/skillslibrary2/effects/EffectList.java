@@ -1,9 +1,9 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.Mode;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -42,49 +42,41 @@ public class EffectList implements Iterable<Effect> {
         }
     }
 
-    public boolean handleEffects(Entity entity, Object... objects) {
+    public boolean handleEffects(Execution execution, Entity entity, Object... objects) {
         boolean result = false;
         Object otherObject = objects.length == 0 ? null : objects[0];
         for (Effect effect : effects) {
-            if (effect instanceof EntityEffect && effect.getMode().runs(Mode.SELF)) {
-                EntityEffect entityEffect = (EntityEffect) effect;
-                result = entityEffect.useEffect(entity);
+            if (effect instanceof EntityEffect entityEffect && effect.getMode().runs(Mode.SELF)) {
+                entityEffect.useEffect(execution, entity);
             }
-            if (effect instanceof TargetEffect && effect.getMode().runs(Mode.OTHER) && otherObject instanceof Entity) {
-                TargetEffect targetEffect = (TargetEffect) effect;
-                result |= targetEffect.useEffect(entity, (Entity) otherObject);
+            if (effect instanceof ComplexTargetEffect complexTargetEffect && effect.getMode().runs(Mode.OTHER) && otherObject instanceof Entity) {
+                complexTargetEffect.useEffect(execution, entity, (Entity) otherObject);
             }
-            else if (effect instanceof LocationEffect && effect.getMode().runs(Mode.LOCATION) && otherObject instanceof Location) {
-                LocationEffect locationEffect = (LocationEffect) effect;
-                result |= locationEffect.useEffect(entity, (Location) otherObject);
+            else if (effect instanceof ComplexLocationEffect complexLocationEffect && effect.getMode().runs(Mode.LOCATION) && otherObject instanceof Location) {
+                complexLocationEffect.useEffect(execution, entity, (Location) otherObject);
             }
-            else if (effect instanceof ItemStackEffect && effect.getMode().runs(Mode.ITEM) && otherObject instanceof ItemStack) {
-                ItemStackEffect itemStackEffect = (ItemStackEffect) effect;
-                result |= itemStackEffect.useEffect(entity, (ItemStack) otherObject);
+            else if (effect instanceof ItemStackEffect itemStack && effect.getMode().runs(Mode.ITEM) && otherObject instanceof ItemStack) {
+                itemStack.useEffect(execution, entity, (ItemStack) otherObject);
             }
         }
         return result;
     }
 
-    public boolean handleExactEffects(Entity entity, Object... objects) {
+    public boolean handleExactEffects(Execution execution, Entity entity, Object... objects) {
         boolean result = false;
         Object otherObject = objects.length == 0 ? null : objects[0];
         for (Effect effect : effects) {
-            if (effect instanceof EntityEffect && effect.getMode().runs(Mode.SELF) && otherObject == null) {
-                EntityEffect entityEffect = (EntityEffect) effect;
-                result = entityEffect.useEffect(entity);
+            if (effect instanceof EntityEffect entityEffect && effect.getMode().runs(Mode.SELF) && otherObject == null) {
+                entityEffect.useEffect(execution, entity);
             }
-            else if (effect instanceof TargetEffect && effect.getMode().runs(Mode.OTHER) && otherObject instanceof Entity) {
-                TargetEffect targetEffect = (TargetEffect) effect;
-                result |= targetEffect.useEffect(entity, (Entity) otherObject);
+            else if (effect instanceof ComplexTargetEffect complexTargetEffect && effect.getMode().runs(Mode.OTHER) && otherObject instanceof Entity) {
+                complexTargetEffect.useEffect(execution, entity, (Entity) otherObject);
             }
-            else if (effect instanceof LocationEffect && effect.getMode().runs(Mode.LOCATION) && otherObject instanceof Location) {
-                LocationEffect locationEffect = (LocationEffect) effect;
-                result |= locationEffect.useEffect(entity, (Location) otherObject);
+            else if (effect instanceof ComplexLocationEffect complexLocationEffect && effect.getMode().runs(Mode.LOCATION) && otherObject instanceof Location) {
+                complexLocationEffect.useEffect(execution, entity, (Location) otherObject);
             }
-            else if (effect instanceof ItemStackEffect && effect.getMode().runs(Mode.ITEM) && otherObject instanceof ItemStack) {
-                ItemStackEffect itemStackEffect = (ItemStackEffect) effect;
-                result |= itemStackEffect.useEffect(entity, (ItemStack) otherObject);
+            else if (effect instanceof ItemStackEffect itemStackEffect && effect.getMode().runs(Mode.ITEM) && otherObject instanceof ItemStack) {
+                itemStackEffect.useEffect(execution, entity, (ItemStack) otherObject);
             }
         }
         return result;

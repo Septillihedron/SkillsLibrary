@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-public class SpawnEffect extends Effect implements EntityEffect, TargetEffect, LocationEffect {
+public class SpawnEffect extends Effect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect {
 
     private final EntityData entityData;
 
@@ -16,7 +16,7 @@ public class SpawnEffect extends Effect implements EntityEffect, TargetEffect, L
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public boolean useEffect(Execution execution, Entity entity) {
         useEffect(entity, entity.getLocation());
         return false;
     }

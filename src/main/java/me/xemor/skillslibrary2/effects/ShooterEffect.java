@@ -5,7 +5,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
 
-public class ShooterEffect extends WrapperEffect implements TargetEffect {
+public class ShooterEffect extends WrapperEffect implements ComplexTargetEffect {
 
     private final boolean onlyProjectiles;
 

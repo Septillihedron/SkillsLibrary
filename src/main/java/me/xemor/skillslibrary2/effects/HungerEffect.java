@@ -1,5 +1,6 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -11,16 +12,15 @@ public class HungerEffect extends ModifyEffect implements EntityEffect, TargetEf
 	}
 
 	@Override
-	public boolean useEffect(Entity entity) {
+	public void useEffect(Execution execution, Entity entity) {
 		if (entity instanceof HumanEntity) {
 			((HumanEntity) entity).setFoodLevel((int) changeValue(((HumanEntity) entity).getFoodLevel()));
 		}
-		return false;
 	}
 
 	@Override
-	public boolean useEffect(Entity livingEntity, Entity target) {
-		return useEffect(target);
+	public void useEffectAgainst(Execution execution, Entity target) {
+		useEffect(execution, target);
 	}
 
 }

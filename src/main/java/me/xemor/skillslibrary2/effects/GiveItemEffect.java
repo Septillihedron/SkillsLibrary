@@ -1,6 +1,7 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.configurationdata.ItemStackData;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -23,20 +24,17 @@ public class GiveItemEffect extends Effect implements EntityEffect, TargetEffect
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public void useEffect(Execution execution, Entity entity) {
         giveItem(entity);
-        return false;
     }
 
     @Override
-    public boolean useEffect(Entity livingEntity, Entity target) {
+    public void useEffectAgainst(Execution execution, Entity target) {
         giveItem(target);
-        return false;
     }
 
     public void giveItem(Entity entity) {
-        if (entity instanceof InventoryHolder) {
-            InventoryHolder inventoryHolder = (InventoryHolder) entity;
+        if (entity instanceof InventoryHolder inventoryHolder) {
             Inventory inventory = inventoryHolder.getInventory();
             HashMap<Integer, ItemStack> leftovers = inventory.addItem(item);
             if (dropIfFull) {

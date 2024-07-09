@@ -1,12 +1,13 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
 public class LightningEffect extends Effect implements EntityEffect, TargetEffect {
 
-    private boolean isFake;
+    private final boolean isFake;
 
     public LightningEffect(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);
@@ -14,15 +15,13 @@ public class LightningEffect extends Effect implements EntityEffect, TargetEffec
     }
 
     @Override
-    public boolean useEffect(Entity boss) {
-        strikeLightning(boss);
-        return false;
+    public void useEffect(Execution execution, Entity entity) {
+        strikeLightning(entity);
     }
 
     @Override
-    public boolean useEffect(Entity entity, Entity target) {
+    public void useEffectAgainst(Execution execution, Entity target) {
         strikeLightning(target);
-        return false;
     }
 
     public void strikeLightning(Entity entity) {

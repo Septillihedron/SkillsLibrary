@@ -23,7 +23,6 @@ public class Effects {
         registerEffect("BLOCKENTITY", BlockEntityEffect.class);
         registerEffect("ARROW", ArrowEffect.class);
         registerEffect("ATTRIBUTE", AttributeEffect.class);
-        registerEffect("BREAKBLOCK", BreakBlockEffect.class);
         registerEffect("LAUNCH", LaunchEffect.class);
         registerEffect("MESSAGE", MessageEffect.class);
         registerEffect("PICKUP", Pickup.class);

@@ -1,10 +1,11 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
 public interface ItemStackEffect {
 
-    boolean useEffect(Entity entity, ItemStack item);
+    void useEffect(Execution execution, Entity entity, ItemStack item);
 
 }

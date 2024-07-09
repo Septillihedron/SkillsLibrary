@@ -27,6 +27,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Triggers implements Listener {
@@ -41,24 +42,26 @@ public class Triggers implements Listener {
 
     public Triggers() {
         AtomicInteger tick = new AtomicInteger();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Collection<Skill> skillDatas = SkillsLibrary.getSkillsManager().getSkills(Trigger.getTrigger("LOOP"));
-                for (Skill skill : skillDatas) {
-                    LoopData loopData = (LoopData) skill.getTriggerData();
-                    if (tick.get() % loopData.getPeriod() == 0) {
-                        for (UUID uuid : SkillsLibrary.getSkillsManager().getLoopEntities()) {
-                            Entity entity = Bukkit.getEntity(uuid);
-                            if (entity instanceof LivingEntity livingEntity) {
-                                skill.handleEffects(livingEntity);
+
+        SkillsLibrary.getScheduling().globalRegionalScheduler().runAtFixedRate(
+                () -> {
+                    Collection<Skill> skillDatas = SkillsLibrary.getSkillsManager().getSkills(Trigger.getTrigger("LOOP"));
+                    for (Skill skill : skillDatas) {
+                        LoopData loopData = (LoopData) skill.getTriggerData();
+                        if (tick.get() % loopData.getPeriod() == 0) {
+                            for (UUID uuid : SkillsLibrary.getSkillsManager().getLoopEntities()) {
+                                Entity entity = Bukkit.getEntity(uuid);
+                                SkillsLibrary.getScheduling().entitySpecificScheduler(entity).run(() -> {
+                                    if (entity instanceof LivingEntity livingEntity) {
+                                        skill.handleEffects(livingEntity);
+                                    }
+                                }, () -> {});
                             }
                         }
                     }
-                }
-                tick.incrementAndGet();
-            }
-        }.runTaskTimer(SkillsLibrary.getInstance(), 1L, 1L);
+                    tick.incrementAndGet();
+                }, 1L, 1L
+        );
     }
 
     @EventHandler(priority = EventPriority.HIGH)

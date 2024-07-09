@@ -1,6 +1,7 @@
 package me.xemor.skillslibrary2.effects;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.ConfigurationSection;
@@ -27,12 +28,10 @@ public class AttributeEffect extends ModifyEffect implements EntityEffect, Targe
 
 
     @Override
-    public boolean useEffect(Entity entity) {
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
+    public void useEffect(Execution execution, Entity entity) {
+        if (entity instanceof LivingEntity livingEntity) {
             applyAttributes(livingEntity);
         }
-        return false;
     }
 
     public void applyAttributes(LivingEntity entity) {
@@ -41,10 +40,9 @@ public class AttributeEffect extends ModifyEffect implements EntityEffect, Targe
     }
 
     @Override
-    public boolean useEffect(Entity livingEntity, Entity target) {
-        if (target instanceof LivingEntity) {
-            applyAttributes((LivingEntity) target);
+    public void useEffectAgainst(Execution execution, Entity target) {
+        if (target instanceof LivingEntity livingEntity) {
+            applyAttributes(livingEntity);
         }
-        return false;
     }
 }

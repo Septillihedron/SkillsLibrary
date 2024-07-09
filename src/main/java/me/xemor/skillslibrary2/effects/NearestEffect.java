@@ -1,18 +1,21 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.SkillsLibrary;
+import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.CompletableFuture;
 
-public class NearestEffect extends WrapperEffect implements EntityEffect, TargetEffect, LocationEffect {
+public class NearestEffect extends WrapperEffect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect {
 
     private final double radius;
 
@@ -22,36 +25,45 @@ public class NearestEffect extends WrapperEffect implements EntityEffect, Target
     }
 
     @Override
-    public boolean useEffect(Entity entity, Location location) {
-        LivingEntity nearest = getNearest(entity, location);
-        if (nearest == null) return false;
-        return handleEffects(entity, nearest);
+    public void useEffect(Execution execution, Entity entity, Location location) {
+        getNearest(execution, entity, location).thenAccept((nearest) -> {
+                    if (nearest == null) return;
+                    handleEffects(entity, nearest);
+        });
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
-        LivingEntity nearest = getNearest(entity, entity.getLocation());
-        if (nearest == null) return false;
-        return handleEffects(entity, nearest);
+    public void useEffect(Execution execution, Entity entity) {
+        getNearest(execution, entity, entity.getLocation()).thenAccept((nearest) -> {
+            if (nearest == null) return;
+            handleEffects(entity, nearest);
+        });
     }
 
     @Override
-    public boolean useEffect(Entity livingEntity, Entity target) {
-        LivingEntity nearest = getNearest(livingEntity, target.getLocation());
-        if (nearest == null) return false;
-        return handleEffects(livingEntity, nearest);
+    public void useEffect(Execution execution, Entity livingEntity, Entity target) {
+        getNearest(execution, livingEntity, target.getLocation()).thenAccept((nearest) -> {
+            if (nearest == null) return;
+            handleEffects(livingEntity, nearest);
+        });
     }
 
-    @Nullable
-    public LivingEntity getNearest(Entity livingEntity, Location location) {
-        World world = location.getWorld();
-        Collection<Entity> entities = world.getNearbyEntities(location, radius, radius, radius);
-        entities.removeIf((entity -> !(entity instanceof LivingEntity)));
-        entities.removeIf((entity -> !getConditions().ANDConditions(livingEntity, false, entity)));
-        if (entities.size() == 0) {
-            return null;
-        }
-        return (LivingEntity) Collections.min(entities, Comparator.comparingDouble(entity -> entity.getLocation().distanceSquared(location)));
+    @NotNull
+    public CompletableFuture<LivingEntity> getNearest(Execution execution, Entity livingEntity, Location location) {
+        CompletableFuture<LivingEntity> completableFuture = new CompletableFuture<>();
+        SkillsLibrary.getFoliaHacks().runASAP(location, () -> {
+            World world = location.getWorld();
+            Collection<Entity> entities = world.getNearbyEntities(location, radius, radius, radius);
+            entities.removeIf((entity -> !(entity instanceof LivingEntity)));
+            SkillsLibrary.getFoliaHacks().runASAP(livingEntity, () -> {
+                entities.removeIf((entity -> !getConditions().ANDConditions(execution, livingEntity, false, entity)));
+                if (entities.isEmpty()) {
+                    return;
+                }
+                completableFuture.complete((LivingEntity) Collections.min(entities, Comparator.comparingDouble(entity -> entity.getLocation().distanceSquared(location))));
+            });
+        });
+        return completableFuture;
     }
 
 }

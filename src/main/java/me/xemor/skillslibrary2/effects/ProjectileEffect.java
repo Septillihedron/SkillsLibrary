@@ -8,7 +8,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-public class ProjectileEffect extends Effect implements EntityEffect, TargetEffect, LocationEffect {
+public class ProjectileEffect extends Effect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect {
 
     private final EntityData projectile;
     private final double velocity;
@@ -20,7 +20,7 @@ public class ProjectileEffect extends Effect implements EntityEffect, TargetEffe
     }
 
     @Override
-    public boolean useEffect(Entity entity) {
+    public boolean useEffect(Execution execution, Entity entity) {
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
             Vector velocity = livingEntity.getEyeLocation().getDirection().multiply(this.velocity);

@@ -4,12 +4,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class VelocityEffect extends ModifyEffect implements EntityEffect, TargetEffect {
+public class VelocityEffect extends ModifyEffect implements EntityEffect, ComplexTargetEffect {
     private String component;
 
     public VelocityEffect(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);
-        if (!configurationSection.contains("value")) super.value = configurationSection.getDouble("velocity", 1.0);
+        if (!configurationSection.contains("value")) super.valueExpr = configurationSection.getDouble("velocity", 1.0);
         // default is Y to maintain backwards compatibility unfortunately
         // would be better for it to be all
         component = configurationSection.getString("component", "Y");

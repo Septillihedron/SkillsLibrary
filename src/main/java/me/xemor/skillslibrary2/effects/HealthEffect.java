@@ -1,8 +1,9 @@
 package me.xemor.skillslibrary2.effects;
 
+import me.xemor.skillslibrary2.execution.Execution;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 
 public class HealthEffect extends ModifyEffect implements EntityEffect, TargetEffect {
@@ -12,18 +13,19 @@ public class HealthEffect extends ModifyEffect implements EntityEffect, TargetEf
 	}
 
 	@Override
-	public boolean useEffect(Entity entity) {
-		if (entity instanceof LivingEntity) {
-			double newHealth = (int) changeValue(((LivingEntity) entity).getHealth());
+	public void useEffect(Execution execution, Entity entity) {
+		if (entity instanceof LivingEntity livingEntity) {
+			double newHealth = (int) changeValue(livingEntity.getHealth());
 			if (newHealth < 0) newHealth = 0;
+			double maxHealth = livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+			if (newHealth > maxHealth) newHealth = maxHealth;
 			((LivingEntity) entity).setHealth(newHealth);
 		}
-		return false;
 	}
 
 	@Override
-	public boolean useEffect(Entity livingEntity, Entity target) {
-		return useEffect(target);
+	public void useEffectAgainst(Execution execution, Entity target) {
+		useEffect(execution, target);
 	}
 
 }

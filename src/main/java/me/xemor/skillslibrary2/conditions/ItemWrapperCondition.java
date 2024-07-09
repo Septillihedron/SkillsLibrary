@@ -1,9 +1,6 @@
 package me.xemor.skillslibrary2.conditions;
 
 import me.xemor.skillslibrary2.SkillsLibrary;
-import me.xemor.skillslibrary2.effects.EntityEffect;
-import me.xemor.skillslibrary2.effects.TargetEffect;
-import me.xemor.skillslibrary2.effects.WrapperEffect;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;

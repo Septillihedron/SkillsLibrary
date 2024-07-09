@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
-public class TeleportEffect extends Effect implements TargetEffect, LocationEffect {
+public class TeleportEffect extends Effect implements ComplexTargetEffect, ComplexLocationEffect {
 
     public TeleportEffect(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);

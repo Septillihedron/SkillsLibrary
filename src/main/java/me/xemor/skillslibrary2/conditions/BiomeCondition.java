@@ -11,11 +11,12 @@ import org.bukkit.entity.Entity;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class BiomeCondition extends Condition implements EntityCondition, TargetCondition, LocationCondition {
 
-    private SetData<Biome> biomes;
+    private final SetData<Biome> biomes;
 
     public BiomeCondition(int condition, ConfigurationSection configurationSection) {
         super(condition, configurationSection);
@@ -23,18 +24,18 @@ public class BiomeCondition extends Condition implements EntityCondition, Target
     }
 
     @Override
-    public boolean isTrue(Entity entity, Location location) {
-        return biomes.inSet(location.getWorld().getBiome(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+    public CompletableFuture<Boolean> isTrue(Entity entity, Location location) {
+        return SkillsLibrary.getFoliaHacks().runASAP(location, () -> biomes.inSet(getBiome(location)));
     }
 
     @Override
-    public boolean isTrue(Entity entity) {
-        return biomes.inSet(getBiome(entity.getLocation()));
+    public CompletableFuture<Boolean> isTrue(Entity entity) {
+        return isTrue(entity, entity.getLocation());
     }
 
     @Override
-    public boolean isTrue(Entity entity, Entity target) {
-        return biomes.inSet(getBiome(target.getLocation()));
+    public CompletableFuture<Boolean> isTrue(Entity entity, Entity target) {
+        return isTrue(entity, target.getLocation());
     }
 
     public Biome getBiome(Location location) {
