@@ -57,10 +57,15 @@ public class ConditionList implements Iterable<Condition> {
         for (Condition condition : conditions) {
             if (workingValue.get() && condition instanceof EntityCondition entityCondition && condition.getMode().runs(Mode.SELF) && (!exact || otherObject == null)) {
                 futures.add(SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
-                    boolean b = entityCondition.isTrue(entity);
-                    if (!b && workingValue.getAndSet(false)) {
-                        condition.getOtherwise().handleEffects(execution, entity);
-                    }
+                    CompletableFuture<Boolean> completableB = entityCondition.isTrue(entity);
+                    completableB.thenAccept(b -> {
+                        if (b) {
+                            if (!b && workingValue.getAndSet(false)) {
+                                condition.getOtherwise().handleEffects(execution, entity);
+                            }
+                        }
+                    });
+                    return completableB;
                 }));
             }
             if (workingValue.get() && condition instanceof TargetCondition targetCondition && otherObject instanceof Entity other && condition.getMode().runs(Mode.OTHER)) {
