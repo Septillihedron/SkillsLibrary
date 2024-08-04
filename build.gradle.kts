@@ -28,7 +28,7 @@ dependencies {
     shadow("me.xemor:configurationdata:3.4.0-SNAPSHOT")
     shadow("me.creeves:ParticlesLibrary:1.1-SNAPSHOT")
     shadow("space.arim.morepaperlib:morepaperlib:0.4.3")
-    shadow("me.xemor:foliahacks:1.6.0")
+    shadow("me.xemor:foliahacks:1.7.0")
     shadow("io.papermc:paperlib:1.0.7")
 }
 

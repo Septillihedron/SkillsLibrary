@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class BlockCondition extends Condition implements LocationCondition {
 
-    private SetData<Material> allowedMaterials;
+    private final SetData<Material> allowedMaterials;
 
     public BlockCondition(int condition, ConfigurationSection configurationSection) {
         super(condition, configurationSection);

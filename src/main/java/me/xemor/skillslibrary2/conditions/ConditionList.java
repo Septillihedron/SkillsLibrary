@@ -45,9 +45,60 @@ public class ConditionList implements Iterable<Condition> {
         }
     }
 
-    @Deprecated
-    public boolean areConditionsTrue(Entity entity, Object... objects) {
-        return ANDConditions(entity, false, objects);
+    public CompletableFuture<Boolean> handleElseBranch(Execution execution, EntityCondition entityCondition, AtomicBoolean workingValue, Entity entity) {
+        return SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
+            CompletableFuture<Boolean> completableB = entityCondition.isTrue(entity);
+            completableB.thenAccept(b -> {
+                if (!b && workingValue.getAndSet(false)) {
+                    if (entityCondition instanceof Condition condition) {
+                        condition.getOtherwise().handleEffects(execution, entity);
+                    }
+                }
+            });
+            return completableB;
+        });
+    }
+
+    public CompletableFuture<Boolean> handleElseBranch(Execution execution, TargetCondition targetCondition, AtomicBoolean workingValue, Entity entity, Entity other) {
+        return SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
+            CompletableFuture<Boolean> completableB = targetCondition.isTrue(entity, other);
+            completableB.thenAccept(b -> {
+                if (!b && workingValue.getAndSet(false)) {
+                    if (targetCondition instanceof Condition condition) {
+                        condition.getOtherwise().handleEffects(execution, entity, other);
+                    }
+                }
+            });
+            return completableB;
+        });
+    }
+
+    public CompletableFuture<Boolean> handleElseBranch(Execution execution, ItemStackCondition itemCondition, AtomicBoolean workingValue, Entity entity, ItemStack item) {
+        return SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
+            CompletableFuture<Boolean> completableB = itemCondition.isTrue(entity, item);
+            completableB.thenAccept(b -> {
+                if (!b && workingValue.getAndSet(false)) {
+                    if (itemCondition instanceof Condition condition) {
+                        condition.getOtherwise().handleEffects(execution, entity, item);
+                    }
+                }
+            });
+            return completableB;
+        });
+    }
+
+    public CompletableFuture<Boolean> handleElseBranch(Execution execution, LocationCondition locationCondition, AtomicBoolean workingValue, Entity entity, Location location) {
+        return SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
+            CompletableFuture<Boolean> completableB = locationCondition.isTrue(entity, location);
+            completableB.thenAccept(b -> {
+                if (!b && workingValue.getAndSet(false)) {
+                    if (locationCondition instanceof Condition condition) {
+                        condition.getOtherwise().handleEffects(execution, entity, location);
+                    }
+                }
+            });
+            return completableB;
+        });
     }
 
     public CompletableFuture<Boolean> ANDConditions(Execution execution, Entity entity, boolean exact, Object... objects) {
@@ -56,42 +107,16 @@ public class ConditionList implements Iterable<Condition> {
         List<CompletableFuture<Boolean>> futures = new ArrayList<>();
         for (Condition condition : conditions) {
             if (workingValue.get() && condition instanceof EntityCondition entityCondition && condition.getMode().runs(Mode.SELF) && (!exact || otherObject == null)) {
-                futures.add(SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
-                    CompletableFuture<Boolean> completableB = entityCondition.isTrue(entity);
-                    completableB.thenAccept(b -> {
-                        if (b) {
-                            if (!b && workingValue.getAndSet(false)) {
-                                condition.getOtherwise().handleEffects(execution, entity);
-                            }
-                        }
-                    });
-                    return completableB;
-                }));
+                futures.add(handleElseBranch(execution, entityCondition, workingValue, entity));
             }
             if (workingValue.get() && condition instanceof TargetCondition targetCondition && otherObject instanceof Entity other && condition.getMode().runs(Mode.OTHER)) {
-                futures.add(SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
-                    boolean b = targetCondition.isTrue(entity, other);
-                    if (!b && workingValue.getAndSet(false)) {
-                        condition.getOtherwise().handleEffects(execution, entity, other);
-                    }
-                }));
+                futures.add(handleElseBranch(execution, targetCondition, workingValue, entity, other));
             }
             if (workingValue.get() && condition instanceof LocationCondition locationCondition && otherObject instanceof Location location && condition.getMode().runs(Mode.LOCATION)) {
-                futures.add(SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
-                    boolean b = locationCondition.isTrue(entity, location);
-                    workingValue.set(false);
-                    if (!b && workingValue.getAndSet(false)) {
-                        condition.getOtherwise().handleEffects(execution, entity, location);
-                    }
-                }));
+                futures.add(handleElseBranch(execution, locationCondition, workingValue, entity, location));
             }
             if (workingValue.get() && condition instanceof ItemStackCondition itemStackCondition && otherObject instanceof ItemStack item && condition.getMode().runs(Mode.ITEM)) {
-                futures.add(SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
-                    boolean b = itemStackCondition.isTrue(entity, item);
-                    if (!b && workingValue.getAndSet(false)) {
-                        condition.getOtherwise().handleEffects(execution, entity, item);
-                    }
-                }));
+                futures.add(handleElseBranch(execution, itemStackCondition, workingValue, entity, item));
             }
         }
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[]{})).thenApply((d) -> workingValue.get());
