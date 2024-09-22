@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
 
 import me.xemor.configurationdata.VectorData;
 
-public class LocationOffsetEffect extends WrapperEffect implements EntityEffect, ComplexLocationEffect, ComplexTargetEffect {
+public class LocationOffsetEffect extends WrapperEffect implements EntityEffect, ComplexLocationEffect, TargetEffect {
 
     private final Vector offset;
 

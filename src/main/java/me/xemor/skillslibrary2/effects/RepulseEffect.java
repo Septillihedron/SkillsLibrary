@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class RepulseEffect extends Effect implements ComplexTargetEffect {
+public class RepulseEffect extends Effect implements TargetEffect {
 
     private final double velocity;
     private final boolean add;

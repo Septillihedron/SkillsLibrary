@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
-public class SoundEffect extends Effect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect {
+public class SoundEffect extends Effect implements EntityEffect, TargetEffect, ComplexLocationEffect {
     private final SoundData soundData;
 
     public SoundEffect(int effect, ConfigurationSection configurationSection) {

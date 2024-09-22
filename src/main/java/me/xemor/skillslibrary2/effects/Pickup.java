@@ -10,7 +10,7 @@ import org.bukkit.entity.Entity;
 /**
  * An effect that picks up the target entity and places it on the user's head.
  */
-public class Pickup extends Effect implements ComplexTargetEffect {
+public class Pickup extends Effect implements TargetEffect {
 
     public Pickup(int effect, ConfigurationSection configurationSection) {
         super(effect, configurationSection);

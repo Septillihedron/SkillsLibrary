@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class KnockbackEffect extends Effect implements ComplexTargetEffect {
+public class KnockbackEffect extends Effect implements TargetEffect {
 
     private final String multiplierExpression;
     private final boolean overwriteCurrentVelocity;

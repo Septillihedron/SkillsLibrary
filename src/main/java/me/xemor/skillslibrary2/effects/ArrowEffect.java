@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
-public class ArrowEffect extends Effect implements ComplexTargetEffect {
+public class ArrowEffect extends Effect implements TargetEffect {
 
     private final String velocityExpression;
     private final String damageExpression;

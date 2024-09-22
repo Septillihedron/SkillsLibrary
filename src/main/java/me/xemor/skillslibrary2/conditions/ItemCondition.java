@@ -46,12 +46,10 @@ public class ItemCondition extends Condition implements EntityCondition, TargetC
     }
 
     public boolean matches(Entity entity) {
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
+        if (entity instanceof LivingEntity livingEntity) {
             ItemStack item = null;
             if (equipmentSlot != null) item = livingEntity.getEquipment().getItem(equipmentSlot);
-            else if (entity instanceof Player) {
-                Player player = (Player) entity;
+            else if (entity instanceof Player player) {
                 PlayerInventory inventory = player.getInventory();
                 item = inventory.getItem(slot);
             }

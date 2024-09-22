@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.Collection;
 
-public class AOE extends WrapperEffect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect {
+public class AOE extends WrapperEffect implements EntityEffect, TargetEffect, ComplexLocationEffect {
 
     double radius;
 

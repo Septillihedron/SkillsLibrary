@@ -49,7 +49,7 @@ public class EffectList implements Iterable<Effect> {
             if (effect instanceof EntityEffect entityEffect && effect.getMode().runs(Mode.SELF)) {
                 entityEffect.useEffect(execution, entity);
             }
-            if (effect instanceof ComplexTargetEffect complexTargetEffect && effect.getMode().runs(Mode.OTHER) && otherObject instanceof Entity) {
+            if (effect instanceof TargetEffect complexTargetEffect && effect.getMode().runs(Mode.OTHER) && otherObject instanceof Entity) {
                 complexTargetEffect.useEffect(execution, entity, (Entity) otherObject);
             }
             else if (effect instanceof ComplexLocationEffect complexLocationEffect && effect.getMode().runs(Mode.LOCATION) && otherObject instanceof Location) {
@@ -69,7 +69,7 @@ public class EffectList implements Iterable<Effect> {
             if (effect instanceof EntityEffect entityEffect && effect.getMode().runs(Mode.SELF) && otherObject == null) {
                 entityEffect.useEffect(execution, entity);
             }
-            else if (effect instanceof ComplexTargetEffect complexTargetEffect && effect.getMode().runs(Mode.OTHER) && otherObject instanceof Entity) {
+            else if (effect instanceof TargetEffect complexTargetEffect && effect.getMode().runs(Mode.OTHER) && otherObject instanceof Entity) {
                 complexTargetEffect.useEffect(execution, entity, (Entity) otherObject);
             }
             else if (effect instanceof ComplexLocationEffect complexLocationEffect && effect.getMode().runs(Mode.LOCATION) && otherObject instanceof Location) {

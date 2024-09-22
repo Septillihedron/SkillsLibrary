@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Potion extends Effect implements EntityEffect, ComplexTargetEffect {
+public class Potion extends Effect implements EntityEffect, TargetEffect {
 
     private final PotionEffect potionEffect;
 

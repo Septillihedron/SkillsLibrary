@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Map;
 
-public class CommandEffect extends Effect implements EntityEffect, ComplexTargetEffect {
+public class CommandEffect extends Effect implements EntityEffect, TargetEffect {
 
     private Executor executor;
     private List<String> commands;

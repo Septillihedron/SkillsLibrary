@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class LocationCubeEffect extends WrapperEffect implements EntityEffect, ComplexLocationEffect, ComplexTargetEffect {
+public class LocationCubeEffect extends WrapperEffect implements EntityEffect, ComplexLocationEffect, TargetEffect {
 
     private final int verticalRadius;
     private final int horizontalRadius;

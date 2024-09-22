@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class VelocityEffect extends ModifyEffect implements EntityEffect, ComplexTargetEffect {
+public class VelocityEffect extends ModifyEffect implements EntityEffect, TargetEffect {
     private String component;
 
     public VelocityEffect(int effect, ConfigurationSection configurationSection) {

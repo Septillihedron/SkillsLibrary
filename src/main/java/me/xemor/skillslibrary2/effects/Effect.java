@@ -33,7 +33,7 @@ public abstract class Effect {
         return switch (mode) {
             case ALL -> true;
             case SELF -> this instanceof EntityEffect;
-            case OTHER -> this instanceof ComplexTargetEffect || this instanceof TargetEffect;
+            case OTHER -> this instanceof TargetEffect || this instanceof TargetEffect;
             case LOCATION -> this instanceof ComplexLocationEffect || this instanceof LocationEffect;
             default -> false;
         };

@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RemovePotionEffect extends Effect implements EntityEffect, ComplexTargetEffect {
+public class RemovePotionEffect extends Effect implements EntityEffect, TargetEffect {
 
     private Set<PotionEffectType> types;
 

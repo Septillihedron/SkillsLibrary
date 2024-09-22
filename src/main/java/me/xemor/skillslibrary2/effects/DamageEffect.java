@@ -7,9 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import java.util.Map;
-
-public class DamageEffect extends Effect implements ComplexTargetEffect, EntityEffect {
+public class DamageEffect extends Effect implements TargetEffect, EntityEffect {
 
     private final String damageExpression;
     private EntityDamageEvent.DamageCause damageCause;

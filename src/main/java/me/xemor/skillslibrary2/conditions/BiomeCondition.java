@@ -1,20 +1,15 @@
 package me.xemor.skillslibrary2.conditions;
 
 import me.xemor.configurationdata.comparison.SetData;
-import me.xemor.skillslibrary2.Skill;
 import me.xemor.skillslibrary2.SkillsLibrary;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
-public class BiomeCondition extends Condition implements EntityCondition, TargetCondition, LocationCondition {
+public class BiomeCondition extends Condition implements EntityCondition, LocationCondition {
 
     private final SetData<Biome> biomes;
 
@@ -33,8 +28,8 @@ public class BiomeCondition extends Condition implements EntityCondition, Target
     }
 
     @Override
-    public CompletableFuture<Boolean> isTrue(Entity entity) {
-        return SkillsLibrary.getFoliaHacks().runASAP(entity, () -> calculate(entity, entity.getLocation()));
+    public boolean isTrue(Entity entity) {
+        return calculate(entity, entity.getLocation());
     }
 
     @Override

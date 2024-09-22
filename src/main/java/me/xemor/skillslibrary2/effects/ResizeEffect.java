@@ -6,7 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Slime;
 
-public class ResizeEffect extends ModifyEffect implements EntityEffect, ComplexTargetEffect {
+public class ResizeEffect extends ModifyEffect implements EntityEffect, TargetEffect {
 
     /**
      * Slime#setSize is a daft method. It sets the maximum health of the slime to n^2, movement speed to 0.1n + 0.2 and attack damage to n.

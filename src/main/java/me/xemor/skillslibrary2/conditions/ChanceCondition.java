@@ -16,7 +16,7 @@ public class ChanceCondition extends Condition implements EntityCondition {
     }
 
     @Override
-    public CompletableFuture<Boolean> isTrue(Entity boss) {
-        return CompletableFuture.completedFuture(ThreadLocalRandom.current().nextFloat() <= chance);
+    public boolean isTrue(Entity boss) {
+        return ThreadLocalRandom.current().nextFloat() <= chance;
     }
 }

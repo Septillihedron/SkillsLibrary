@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
-public class RandomTeleportEffect extends Effect implements EntityEffect, ComplexTargetEffect {
+public class RandomTeleportEffect extends Effect implements EntityEffect, TargetEffect {
 
     private final double maxDistance;
     private final double minDistance;

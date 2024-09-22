@@ -35,7 +35,7 @@ public class LungeEffect extends Effect implements EntityEffect, TargetEffect {
     }
 
     @Override
-    public void useEffectAgainst(Execution execution, Entity target) {
+    public void useEffect(Execution execution, Entity entity, Entity target) {
         if (target instanceof LivingEntity livingTarget) {
             SkillsLibrary.getFoliaHacks().runASAP(livingTarget, () -> {
                 setVelocity(execution, livingTarget);

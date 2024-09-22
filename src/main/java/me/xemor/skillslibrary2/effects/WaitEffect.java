@@ -7,7 +7,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class WaitEffect extends WrapperEffect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect, ItemStackEffect {
+public class WaitEffect extends WrapperEffect implements EntityEffect, TargetEffect, ComplexLocationEffect, ItemStackEffect {
 
     private final long ticksDelay;
 

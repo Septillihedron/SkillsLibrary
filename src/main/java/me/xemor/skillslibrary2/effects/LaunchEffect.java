@@ -4,14 +4,13 @@ import me.xemor.configurationdata.entity.EntityData;
 import me.xemor.skillslibrary2.SkillsLibrary;
 import me.xemor.skillslibrary2.execution.Execution;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class LaunchEffect extends Effect implements EntityEffect, ComplexTargetEffect {
+public class LaunchEffect extends Effect implements EntityEffect, TargetEffect {
 
     private final EntityData entityData;
     private final double velocity;

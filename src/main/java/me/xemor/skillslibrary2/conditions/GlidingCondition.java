@@ -1,10 +1,13 @@
 package me.xemor.skillslibrary2.conditions;
 
+import me.xemor.skillslibrary2.SkillsLibrary;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
-public class GlidingCondition extends Condition implements EntityCondition {
+import java.util.concurrent.CompletableFuture;
+
+public class GlidingCondition extends Condition implements EntityCondition, TargetCondition {
 
     private final boolean shouldGlide;
 
@@ -14,11 +17,17 @@ public class GlidingCondition extends Condition implements EntityCondition {
     }
 
     @Override
-    public boolean isTrue(Entity entity) {
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
-            return livingEntity.isGliding() == shouldGlide;
-        }
-        return false;
+    public CompletableFuture<Boolean> isTrue(Entity entity) {
+        return SkillsLibrary.getFoliaHacks().runASAP(entity, () -> {
+            if (entity instanceof LivingEntity livingEntity) {
+                return livingEntity.isGliding() == shouldGlide;
+            }
+            return false;
+        });
+    }
+
+    @Override
+    public CompletableFuture<Boolean> isTrue(Entity entity, Entity target) {
+        return isTrue(target);
     }
 }

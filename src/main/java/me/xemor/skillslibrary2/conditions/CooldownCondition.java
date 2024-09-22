@@ -5,6 +5,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class CooldownCondition extends Condition implements EntityCondition {
 
@@ -17,13 +18,13 @@ public class CooldownCondition extends Condition implements EntityCondition {
     }
 
     @Override
-    public boolean isTrue(Entity boss) {
-        double cooldownEnds = cooldownEndsMap.getOrDefault(boss.getUniqueId(), -1L);
+    public CompletableFuture<Boolean> isTrue(Entity entity) {
+        double cooldownEnds = cooldownEndsMap.getOrDefault(entity.getUniqueId(), -1L);
         if (cooldownEnds < System.currentTimeMillis()) {
-            cooldownEndsMap.put(boss.getUniqueId(), cooldown + System.currentTimeMillis());
-            return true;
+            cooldownEndsMap.put(entity.getUniqueId(), cooldown + System.currentTimeMillis());
+            return CompletableFuture.completedFuture(true);
         }
-        return false;
+        return CompletableFuture.completedFuture(false);
     }
 
 }

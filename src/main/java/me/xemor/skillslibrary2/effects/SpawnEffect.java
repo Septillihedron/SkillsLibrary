@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-public class SpawnEffect extends Effect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect {
+public class SpawnEffect extends Effect implements EntityEffect, TargetEffect, ComplexLocationEffect {
 
     private final EntityData entityData;
 

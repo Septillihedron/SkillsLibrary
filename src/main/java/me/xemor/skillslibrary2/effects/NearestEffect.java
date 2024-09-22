@@ -8,14 +8,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
 
-public class NearestEffect extends WrapperEffect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect {
+public class NearestEffect extends WrapperEffect implements EntityEffect, TargetEffect, ComplexLocationEffect {
 
     private final double radius;
 

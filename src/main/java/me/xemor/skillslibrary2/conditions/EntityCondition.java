@@ -6,6 +6,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface EntityCondition {
 
-    CompletableFuture<Boolean> isTrue(Entity entity);
+    boolean isTrue(Entity entity);
 
 }

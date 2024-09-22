@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /*
     This class was originally written by Creeves
  */
-public class TimerEffect extends WrapperEffect implements EntityEffect, ComplexTargetEffect, ComplexLocationEffect, ItemStackEffect {
+public class TimerEffect extends WrapperEffect implements EntityEffect, TargetEffect, ComplexLocationEffect, ItemStackEffect {
 
     private final long ticksDelay;
     private final long period;
