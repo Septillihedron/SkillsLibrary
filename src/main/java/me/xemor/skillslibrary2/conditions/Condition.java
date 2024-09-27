@@ -1,11 +1,14 @@
 package me.xemor.skillslibrary2.conditions;
 
 import me.xemor.skillslibrary2.Mode;
+import me.xemor.skillslibrary2.OtherObject;
 import me.xemor.skillslibrary2.SkillsLibrary;
 import me.xemor.skillslibrary2.effects.EffectList;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-public abstract class Condition {
+public abstract class Condition implements EntityCondition, TargetCondition, LocationCondition, ItemStackCondition{
 
     private final int condition;
     private Mode mode;
@@ -58,6 +61,32 @@ public abstract class Condition {
             result.printStackTrace();
         }
         return null;
+    }
+
+    // exact, null is for the identity element
+    public CompletableFuture<Boolean> isTrue(Entity self, OtherObject otherObject) {
+        if (!mode.runs(otherObject.getMode())) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return switch (otherObject) {
+            case OtherObject.Empty ignored -> isTrue(self);
+            case OtherObject.Target target -> isTrue(self, target.target());
+            case OtherObject.Location location -> isTrue(self, location.location());
+            case OtherObject.ItemStack itemStack -> isTrue(self, itemStack.itemStack());
+        };
+    }
+
+    public CompletableFuture<Boolean> isTrue(Entity self) {
+        return CompletableFuture.completedFuture(null);
+    }
+    public CompletableFuture<Boolean> isTrue(Entity self, Entity other) {
+        return CompletableFuture.completedFuture(null);
+    }
+    public CompletableFuture<Boolean> isTrue(Entity self, Location location) {
+        return CompletableFuture.completedFuture(null);
+    }
+    public CompletableFuture<Boolean> isTrue(Entity self, ItemStack itemStack) {
+        return CompletableFuture.completedFuture(null);
     }
 
     private CompletableFuture<Boolean> correctThread(Entity entity, Supplier<Boolean> condition) {
